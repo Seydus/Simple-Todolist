@@ -1,0 +1,492 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-white">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <ul class="nav-pills todo-nav mt-2 mb-2 ps-0">
+                                <li class="row justify-content-between">
+                                    <div class="col-md-7">
+                                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3">
+                                            @for (int i = 0; i < Model.TodoContainers.Count; i++)
+                                            {
+                                                @if (i < 3)
+                                                {
+                                                    <div class="col-12 col-md-3 col-lg-2 my-3" id="todo-list-container-item-first">
+                                                        <div>
+                                                            @using (Html.BeginForm("GetItemData", "Home", FormMethod.Post, new { id = "container-data" }))
+                                                            {
+                                                                @Html.HiddenFor(model => model.EditableContainer.Id)
+                                                                <button type="button" class="item-btn btn btn-outline-primary w-100 text-center animate__animated animate__fadeIn" data-container-id="@Model.TodoContainers[i].Id" onclick="OnGetItemData('@Model.TodoContainers[0].Id')">
+                                                                    @Model.TodoContainers[i].Title
+                                                                </button>
+                                                                @Html.ValidationSummary()
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (Model.TodoContainers.Count > 3)
+                                            {
+                                                <div class="col-12 col-md-3 col-lg-2 my-3">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-outline-primary w-100 text-center dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            More
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            @for (int i = 3; i < Model.TodoContainers.Count; i++)
+                                                            {
+                                                                <li id="todo-list-container-item-second">
+                                                                    <div>
+                                                                        @using (Html.BeginForm("GetItemData", "Home", FormMethod.Post, new { id = "container-data" }))
+                                                                        {
+                                                                            @Html.HiddenFor(model => model.EditableContainer.Id)
+                                                                            <button class="dropdown-item animate__animated animate__fadeIn" type="button" data-container-id="@Model.TodoContainers[i].Id" onclick="OnGetItemData('@Model.TodoContainers[i].Id')">
+                                                                                @Model.TodoContainers[i].Title
+                                                                            </button>
+                                                                            @Html.ValidationSummary()
+                                                                        }
+                                                                    </div>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="col-12 col-md-3 col-lg-2 my-3">
+                                                <button class="btn btn-primary w-100 text-center animate__animated animate__bounceIn" data-bs-toggle="modal" data-bs-target="#addContainerModal">
+                                                    Add
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        @*<div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-3">
+                                            <div class="col">
+                                                <button class="item-btn btn btn-outline-success w-100 text-center animate__animated animate__fadeIn" data-bs-toggle="modal" data-bs-target="#editContainerModal" type="button" >
+                                                    <p class="text-center mb-0">Edit</p>
+                                                </button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="item-btn btn btn-outline-danger w-100 text-center animate__animated animate__fadeIn" type="button" onclick="deleteContainer(event, '@Model.EditableContainer.Id')"">
+                                                    <p class="text-center mb-0">Delete</p>
+                                                </button>
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                </li>
+
+                                <li class="modal fade" id="addContainerModal" tabindex="-1" aria-labelledby="addContainerModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="addContainerModalLabel">Create Container</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body" id="modal-container-body">
+                                                <div class="form-floating mb-3">
+                                                    @using (Html.BeginForm("CreateContainer", "Home", FormMethod.Post, new { id = "container-post" }))
+                                                    {
+                                                        <input type="text" class="form-control" id="create-container-input" placeholder="Enter name here..." name="EditableContainer.Title" required>
+                                                        <button type="submit" class="btn btn-primary" >Create</button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="modal fade" id="editContainerModal" tabindex="-1" aria-labelledby="editContainerModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="editContainerModalLabel">Edit Container</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body" id="modal-container-body">
+                                                <div class="form-floating mb-3">
+                                                    @using (Html.BeginForm("EditContainer", "Home", FormMethod.Post, new { id = "container-edit-get" }))
+                                                    {
+                                                        @Html.HiddenFor(model => model.EditableContainer.Id)
+                                                        <input type="text" class="form-control" id="edit-container-input" data-container-item-id="@Model.EditableContainer.Id" placeholder="Enter name here..." name="EditableContainer.Title" required>
+                                                        <label for="EditableContainer_Title">Name:</label>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary" @*onclick="$('#editContainerModal').modal('hide')"*@>Update</button>
+                                                        </div>
+                                                        @Html.ValidationSummary()
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            @using (var form = Html.BeginForm("CreateItem", "Home", FormMethod.Post, new { @class = "item-post mb-3 mt-3 d-flex justify-content-center align-items-center" }))
+                            {
+                                @Html.HiddenFor(model => @Model.EditableItem.Id)
+                                <input type="text" class="item-form-control form-control add-task" id="EditableItem_Title" placeholder="New Task..." required/>
+                                @Html.ValidationSummary()
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="ex1-content">
+                        <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                            <ul class="list-group mb-0" id="todo-list">
+                                @foreach (var item in Model.TodoItems)
+                                {
+                                    if (item.ContainerId == Model.EditableContainer.Id)
+                                    {
+                                        <li class="list-group-item d-flex align-items-center border-0 mb-2 rounded" style="background-color: #f4f6f7; display: flex; justify-content: space-between;" id="item-parent-@item.Id">
+                                            <div class="d-flex align-items-center">
+                                                <div id="item-checkbox-@item.Id">
+                                                    <input class="form-check-input me-2" type="checkbox" placeholder="checkbox" checked="@item.IsDone" onclick="toggleIsDone(event, '@item.Id')" />
+                                                </div>
+                                                <div id="todo-item-title-@item.Id">
+                                                    @item.Title
+                                                </div>
+                                            </div>
+                                            <div class="btn-group">
+                                                <button class="btn-hover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" style="width: 30px; height: 30px; border-radius: 5px; border: none;">
+                                                    <div class="three-dots-container">
+                                                        <div class="three-dot dot-1"></div>
+                                                        <div class="three-dot dot-2"></div>
+                                                        <div class="three-dot dot-3"></div>
+                                                    </div>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" data-edit-item-id="@item.Id" onclick="editItem(event, '@item.Id', '@item.Title')">Edit</a></li>
+                                                    <li><a class="dropdown-item" data-edit-item-id="@item.Id" onclick="deleteItem(event, '@item.Id')">Delete</a></li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var currentContainerId;
+
+        $('input[data-container-id]').click(function (event) {
+            event.preventDefault();
+
+            var button = $(this);
+            var containerId = button.data('container-id');
+
+            OnGetItemData(containerId);
+        });
+
+        function OnGetItemData(containerId) {
+            var currentUrl = new URL(window.location.href);
+            currentUrl.pathname = '/Home/GetItemData/' + containerId;
+            history.pushState(null, null, currentUrl.href);
+
+            $.ajax({
+                url: `/Home/GetItemData/${containerId}`,
+                type: 'GET',
+                headers: {
+                    Accept: 'application/json'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        var data = response.data;
+                        var resultHtml = '';
+
+                        data.forEach(function (item) {
+                            if (item.containerId == response.containerId) {
+                                var checked = item.isDone ? "checked" : "";
+                                var itemHtml = '<li class="list-group-item d-flex align-items-center border-0 mb-2 rounded" style="background-color: #f4f6f7; display: flex; justify-content: space-between;" id=item-parent-' + item.id + '>';
+                                itemHtml += '<div class="d-flex align-items-center">';
+                                itemHtml += `<div id="item-checkbox-${item.id}">`;
+                                itemHtml += `<input class="form-check-input me-2" type="checkbox" placeholder="checkbox" ${checked} onclick="toggleIsDone(event, '${item.id}')" />`;
+                                itemHtml += '</div>'
+                                itemHtml += '<div id="todo-item-title-' + item.id + '">'
+                                itemHtml += item.title;
+                                itemHtml += '</div>'
+                                itemHtml += '</div>';
+                                itemHtml += '<div class="btn-group">';
+                                itemHtml += '<button class="btn-hover" type="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false" style="width: 30px; height: 30px; border-radius: 5px; border: none;">';
+                                itemHtml += '<div class="three-dots-container">';
+                                itemHtml += '<div class="three-dot dot-1"></div>';
+                                itemHtml += '<div class="three-dot dot-2"></div>';
+                                itemHtml += '<div class="three-dot dot-3"></div>';
+                                itemHtml += '</div>';
+                                itemHtml += '</button>';
+                                itemHtml += '<ul class="dropdown-menu">';
+                                itemHtml += '<li><a class="dropdown-item" data-edit-item-id="' + item.id + '" onclick="editItem(event, ' + item.id + ', \'' + item.title + '\')">Edit</a></li>';
+                                //itemHtml += '<li><a class="dropdown-item" data-edit-item-id="' + itemId + ' href="/Home/GetItemData/2011">Move</a></li>';
+                                itemHtml += '<li><a class="dropdown-item" data-edit-item-id="' + item.id + '" onclick="deleteItem(event, ' + item.id + ')">Delete</a></li>';
+                                itemHtml += '</ul>';
+                                itemHtml += '</div>';
+                                itemHtml += '</li>';
+
+                                resultHtml += itemHtml;
+                            }
+                        });
+
+                        currentContainerId = response.containerId;
+                        $('#todo-list').html(resultHtml);
+                    } else {
+                        console.error('Error loading item data:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading item data:', error);
+                }
+            });
+        }
+
+        function editItem(event, itemId, itemName) {
+            event.preventDefault();
+
+            var resultHtml =
+                '<form action="/Home/Edit" method="post" class="col-auto item-edit-get">' +
+                '<input type="hidden" name="EditableContainer.Id" value="' + itemId + '" />' +
+                '<input type="text" id="edit-item-input" data-edit-item-id="' + itemId + '" class="nav-link" placeholder="' + itemName + '" value="' + itemName + '" style="color: black; height: 30px; border-color: #316CF4; border-radius: 5px; border-width: 1px;" />' +
+                '<div class="validation-summary-valid" data-valmsg-summary="true"><ul></ul></div>' +
+                '</form>';
+
+            $('#todo-item-title-' + itemId).html(resultHtml);
+        }
+
+        $(document).on('submit', '.item-edit-get', function (event) {
+            event.preventDefault();
+
+            var form = $(this);
+            var itemId = form.find('#edit-item-input').data('edit-item-id');
+            var title = form.find('#edit-item-input').val();
+
+            console.log(title);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: { id: itemId, title: title },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        var resultHtml = title;
+
+                        $('#todo-item-title-' + itemId).html(resultHtml);
+                    } else {
+                        console.error('Error editing item title:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error editing item title:', error);
+                }
+            });
+        });
+
+        function deleteContainer(event, Id)
+        {
+            event.preventDefault();
+            var name = `todo-container-title-${Id}`;
+            const divElement = document.getElementById(name);
+
+            if (divElement) {
+                $.ajax({
+                    url: `/Home/DeleteContainer/${Id}`,
+                    type: 'POST',
+                    data: { id: Id },
+                    success: function (response) {
+                        if (response.success) {
+                            divElement.remove();
+                            console.log('Container data deleted successfully');
+                        } else {
+                            console.error('Error deleting item data:', response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error deleting item data:', error);
+                    }
+                });
+            } else {
+                console.error('Element with ID ' + name + ' not found');
+            }
+        }
+
+        function deleteItem(event, Id) {
+            event.preventDefault();
+            var name = `item-parent-${Id}`;
+            const divElement = document.getElementById(name);
+
+            if (divElement) {
+                $.ajax({
+                    url: `/Home/DeleteItem/${Id}`,
+                    type: 'POST',
+                    data: { id: Id },
+                    success: function (response) {
+                        if (response.success) {
+                            divElement.remove();
+                            console.log('Item data deleted successfully');
+                        } else {
+                            console.error('Error deleting item data:', response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error deleting item data:', error);
+                    }
+                });
+            } else {
+                console.error('Element with ID ' + name + ' not found');
+            }
+        }
+
+        function toggleIsDone(event, itemId) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/Home/ToggleIsDone',
+                type: 'POST',
+                data: { id: itemId },
+                headers: {
+                    Accept: 'application/json'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        var checked = response.isDone ? "checked" : "";
+                        var resultHtml = `<input class="form-check-input me-2" type="checkbox" placeholder="checkbox" ${checked} onclick="toggleIsDone(event, '${itemId}')" />`;
+                        $('#item-checkbox-' + itemId).html(resultHtml);
+                    } else {
+                        console.error('Error toggling item:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error toggling item:', error);
+                }
+            });
+        }
+
+        function OnGetContainerData() {
+            $.ajax({
+                url: `/Home/GetContainerData`,
+                type: 'GET',
+                headers: {
+                    Accept: 'application/json'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        var data = response.data;
+                        var resultHtml = '';
+
+                        data.forEach(function (item) {
+                            var checked = item.isDone ? "checked" : "";
+                            var itemHtml = '<div role="presentation" class="nav-item all-task active">';
+                            itemHtml += '<form method="post" action="/Home/GetItemData" class="col-auto" id="container-data">';
+                            itemHtml += '<input type="hidden" name="EditableContainer.Id" value="' + item.id + '" />';
+                            itemHtml += '<input type="button" class="nav-link" id="container-id-' + item.id + '" style="padding-right: 0px; padding-left: 0px; margin-right: 30px" value="' + item.title + '" data-container-id="' + item.id + '" onclick="OnGetItemData(\'' + item.id + '\')" />';
+                            itemHtml += '<div class="validation-summary-valid" data-valmsg-summary="true"><ul></ul></div>';
+                            itemHtml += '</form>';
+                            itemHtml += '</div>';
+
+
+                            resultHtml += itemHtml;
+                        });
+
+
+                        currentContainerId = response.containerId;
+                        $('#todo-list-container-item').html(resultHtml);
+                    } else {
+                        console.error('Error loading item data:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error loading item data:', error);
+                }
+            });
+        }
+
+        // Creates a container
+        $('#container-post').submit(function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var form = $(this);
+            var title = form.find('#create-container-input').val();
+            console.log(title);
+
+            var viewModel = {
+                EditableContainer: {
+                    Title: title
+                },
+                EditableItem: {
+                    Title: null,
+                    ContainerId: null
+                }
+            };
+            
+            $.ajax({
+                url: '/Home/CreateContainer',
+                type: 'POST',
+                data: JSON.stringify(viewModel),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.success) {
+                        console.log('Container Data inserted successfully');
+                        OnGetContainerData();
+                    } else {
+                        console.error('Error inserting Container data:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error inserting Container data:', error);
+                }
+            });
+        });
+
+        // Creates an item to the specific container.
+        $(document).on('submit', '.item-post', function (event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const title = $(form).find('.item-form-control').val();
+
+            var viewModel = {
+                EditableContainer: {
+                    Title: null
+                },
+                EditableItem: {
+                    Title: title,
+                    ContainerId: currentContainerId
+                }
+            };
+
+            $.ajax({
+                url: '/Home/CreateItem',
+                type: 'POST',
+                data: JSON.stringify(viewModel),
+                contentType: 'application/json',
+                success: function (response) {
+                    if (response.success) {
+                        console.log('Item data inserted successfully');
+
+                        $(form).find('.item-form-control').val('');
+
+                        OnGetItemData(currentContainerId);
+                    } else {
+                        console.error('Error inserting item data:', response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error inserting item data:', error);
+                }
+            });
+        });
+    </script>
+}
