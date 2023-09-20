@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "iDfBDGffI4f5o1Gt19hkxer9qmXo2Jlt2QghTiSJeBPL5ib7Njo9koqAZaUqoZi2knqBEB5+QW1x1SFHrB1KIA==",
+  "dgSpecHash": "fRuhD9h7G35XRrGFP3XB+owX5iiTfze2xqb0eZwFeImJ8ukAc7cuE82TmcNSAWXmca3+3dnMVtCQXSvXAe5Omg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\TodoList\\TodoList.csproj",
+  "projectFilePath": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\Simple-Todolist\\Simple-Todolist\\TodoList.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Saidus\\.nuget\\packages\\dapper\\2.0.138\\dapper.2.0.138.nupkg.sha512",
     "C:\\Users\\Saidus\\.nuget\\packages\\dapper.contrib\\2.0.78\\dapper.contrib.2.0.78.nupkg.sha512",

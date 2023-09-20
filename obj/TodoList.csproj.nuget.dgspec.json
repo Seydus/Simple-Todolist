@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\TodoList\\TodoList.csproj": {}
+    "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\Simple-Todolist\\Simple-Todolist\\TodoList.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\TodoList\\TodoList.csproj": {
+    "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\Simple-Todolist\\Simple-Todolist\\TodoList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\TodoList\\TodoList.csproj",
+        "projectUniqueName": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\Simple-Todolist\\Simple-Todolist\\TodoList.csproj",
         "projectName": "TodoList",
-        "projectPath": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\TodoList\\TodoList.csproj",
+        "projectPath": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\Simple-Todolist\\Simple-Todolist\\TodoList.csproj",
         "packagesPath": "C:\\Users\\Saidus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\TodoList\\obj\\",
+        "outputPath": "C:\\Users\\Saidus\\OneDrive\\Documents\\_Software Engineering\\Web Application\\Simple-Todolist\\Simple-Todolist\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Saidus\\AppData\\Roaming\\NuGet\\NuGet.Config",
