@@ -24,7 +24,7 @@ namespace TodoList.Controllers
 
         [HttpPost]
         public IActionResult Edit(int id, string title)
-        {
+        { 
             if (ModelState.IsValid)
             {
                 using (var db = DbHelper.GetConnection())
